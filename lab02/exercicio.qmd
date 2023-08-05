@@ -21,6 +21,25 @@ O dataset `PlantGrowth` contém medidas de tamanhos de uma mesma espécie de pla
 ```{r}
 PlantGrowth
 plot(weight ~ group, data = PlantGrowth)
+
+PlantGrowth |>
+  dplyr::group_by(group) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    mean = mean(weight),
+    sd = sd(weight)
+  )
+
+
+
+```
+
+```{r}
+x <- lm(weight ~ group, data = PlantGrowth)
+summary(x)
+
+yy <- aov(weight ~ group, data = PlantGrowth)
+summary(yy)
 ```
 
 ## Calcule estatísticas descritivas por grupo
@@ -41,8 +60,9 @@ plot(weight ~ group, data = PlantGrowth)
 Ajuste um modelo de regressão linear `lm()` para `weigth` explicado por `group`.
 
 ```{r}
+modelo <- lm(weight ~ group, data = PlantGrowth)
 
-
+summary(modelo)
 ```
 
 <interpretacao>
@@ -53,7 +73,7 @@ Rode `plot()` do seu modelo. O modelo está bem ajustado? Os resíduos estão em
 
 ```{r plot}
 
-
+plot(modelo)
 
 ```
 
@@ -68,14 +88,20 @@ Faça o mesmo ajuste usando `aov()`
 
 ```{r}
 
+modelo_aov <- aov(weight ~ group, data = PlantGrowth)
 
-
+summary(modelo_aov)
 ```
+
+
 
 Faça os testes 2 a 2 pelo método de Tukey e Bonferroni
 
 ```{r}
+TukeyHSD(modelo_aov)
+```
 
+```{r}
 
 
 ```

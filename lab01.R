@@ -46,5 +46,3 @@ res_tabela |>
   janitor::clean_names() |>
   ggplot(aes(x = speed)) +
   geom_histogram()
-
-
