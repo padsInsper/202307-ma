@@ -5,6 +5,7 @@ date: today
 format:
   html:
     code-fold: true
+    embed-resources: true
 ---
 
 ## Pacotes
@@ -20,7 +21,11 @@ O dataset `PlantGrowth` contém medidas de tamanhos de uma mesma espécie de pla
 
 ```{r}
 PlantGrowth
-plot(weight ~ group, data = PlantGrowth)
+```
+
+## Calcule estatísticas descritivas por grupo
+
+```{r tabela}
 
 PlantGrowth |>
   dplyr::group_by(group) |>
@@ -30,28 +35,12 @@ PlantGrowth |>
     sd = sd(weight)
   )
 
-
-
-```
-
-```{r}
-x <- lm(weight ~ group, data = PlantGrowth)
-summary(x)
-
-yy <- aov(weight ~ group, data = PlantGrowth)
-summary(yy)
-```
-
-## Calcule estatísticas descritivas por grupo
-
-```{r tabela}
-
-
-
 ```
 
 ```{r grafico}
 
+ggplot(PlantGrowth, aes(x = group, y = weight)) +
+  geom_boxplot()
 
 ```
 
@@ -77,12 +66,18 @@ plot(modelo)
 
 ```
 
-> TEXTO
+Pelos gráficos, parece que o modelo está bem ajustado, a menos de um outlier no grupo `ctrl` e dois outliers no grupo `trt1`.
 
 ## Inferência
 
 Consulte `summary()`. Quais as conclusões do teste?
 Compare as conclusões com a inspeção visual (tabela e gráfico acima). Está de acordo?
+
+```{r}
+summary(modelo)
+```
+
+Ambos os testes deram como não significantes a nível de 5%. Isso está de acordo com a inspeção visual, pois os boxplots se sobrepõem.
 
 Faça o mesmo ajuste usando `aov()`
 
@@ -93,7 +88,7 @@ modelo_aov <- aov(weight ~ group, data = PlantGrowth)
 summary(modelo_aov)
 ```
 
-
+O teste F do `aov` deu como significante a nível de 5%. Isso está de acordo com a inspeção visual, já que os grupos de tratamento deram resultados bem diferentes.
 
 Faça os testes 2 a 2 pelo método de Tukey e Bonferroni
 
@@ -102,8 +97,11 @@ TukeyHSD(modelo_aov)
 ```
 
 ```{r}
-
-
+pairwise.t.test(
+  PlantGrowth$weight,
+  PlantGrowth$group,
+  p.adjust.method="bonferroni"
+)
 ```
 
 ## Conclusão
@@ -113,3 +111,5 @@ Os tratamentos tiveram efeito? Quanto?
 trt1 > trt2,
 trt1 = ctrl
 trt2 = ctrl
+
+Ou seja, nenhum dos tratamentos deu significante a nível de 5% quando comparado com o grupo controle. Porém, o tratamento 1 foi significante quando comparado com o tratamento 2. Isso significa que o tratamento 2 aumentou o peso das plantas em relação ao tratamento 1, mas isso não é muito relevante, já que o tratamento 2 não aumentou o peso das plantas em relação ao grupo controle.
