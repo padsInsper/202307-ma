@@ -1,0 +1,8 @@
+# 18h-20h
+
+- FactoMineR / factoextra: PCA
+- FactoMineR / factoextra: cluster
+
+# 20h-22h
+
+- Exercício
